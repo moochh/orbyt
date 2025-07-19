@@ -1,29 +1,27 @@
+// src/app.ts
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import registerRoutes from './routes';
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middlewares
+// Middleware
 app.use(cors());
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Register routes
 registerRoutes(app);
 
-// Routes
+// Base route
 app.get('/', (_req, res) => {
   res.send('🚀 API is running...');
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
-});
+export default app;
