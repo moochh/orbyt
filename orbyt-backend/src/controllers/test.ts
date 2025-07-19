@@ -1,5 +1,16 @@
 import { Request, Response } from 'express';
-import { addUser } from '../services/test';
+import { addUser, getUsers } from '../services/test';
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await getUsers();
+    res.json({
+      data: users,
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 export const createUser = async (req: Request, res: Response) => {
   const { emailAddress, password, firstName, lastName } = req.body;

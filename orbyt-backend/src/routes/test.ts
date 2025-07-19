@@ -1,13 +1,14 @@
 import express from 'express';
-import { createUser } from '../controllers/test';
+import { createUser, getAllUsers } from '../controllers/test';
 import { validateBody } from '../middleware/validateBody';
 
 const router = express.Router();
 
+router.get('/users', getAllUsers);
 router.post(
   '/users',
   validateBody(['emailAddress', 'password', 'firstName', 'lastName']),
-  createUser,
+  createUser
 );
 
 export default router;
