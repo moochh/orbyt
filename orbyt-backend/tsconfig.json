@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "types": ["node", "express"],
   },
-  "include": ["src"],
+  "include": ["src", "./api/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
