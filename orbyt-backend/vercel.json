@@ -1,5 +1,4 @@
 {
   "version": 2,
-  "source": "api/index.js",
-  "destination": "/api/index.js"
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
 }
