@@ -15,9 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Register routes
-registerRoutes(app);
-
 // Base route
 app.get('/', (_req, res) => {
   res.send('🚀 API is running...');
