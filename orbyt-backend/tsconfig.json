@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2024",
+    "target": "ESNext",
     "module": "CommonJS",
-    "rootDir": "./",
-    "outDir": "./public",
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["node", "express"],
   },
   "include": ["src", "./api/*.ts"],
   "exclude": ["node_modules", "dist"]
