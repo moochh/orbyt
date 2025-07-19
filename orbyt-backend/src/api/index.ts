@@ -24,6 +24,4 @@ app.get('/', (_req, res) => {
   res.send('🚀 API is running...');
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
-});
+module.exports = app;
