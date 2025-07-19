@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",                          // Modern JS features
+    "module": "CommonJS",                        // Required for Node.js compatibility
+    "rootDir": "./src",                          // Where your TypeScript files are
+    "outDir": "./dist",                          // Where compiled JS files go
+    "strict": true,                              // Enable all strict type checks
+    "esModuleInterop": true,                     // Allow default imports from CommonJS modules
+    "forceConsistentCasingInFileNames": true,    // Avoid case-related bugs
+    "moduleResolution": "node",                  // Resolve modules using Node.js strategy
+    "skipLibCheck": true,                        // Skip type checking for node_modules
+    "resolveJsonModule": true,                   // Allow importing .json files
+    "types": ["node", "express"]                 // Include typings for Node.js and Express
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
