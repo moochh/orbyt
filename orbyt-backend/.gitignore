@@ -3,3 +3,50 @@ node_modules
 .env
 
 /src/generated/prisma
+
+# Node.js
+node_modules/
+pnpm-lock.yaml
+
+# Build output
+dist/
+build/
+public/
+
+# Environment variables
+.env
+.env.*.local
+.env.local
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+*.sqlite
+*.sqlite-journal
+
+# Optional: ignore generated Prisma client (only if regenerating every time)
+# prisma/generated/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.iml
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+*.lcov
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Optional: system files
+*.swp
