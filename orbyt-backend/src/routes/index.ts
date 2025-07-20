@@ -1,20 +1,16 @@
-import { Express } from 'express';
 import fs from 'fs';
 import path from 'path';
 
-export default function registerRoutes(app: Express) {
-  const routesDir = __dirname;
+const routesDir = __dirname;
+const routeFiles = fs
+  .readdirSync(routesDir)
+  .filter((file) => file !== 'index.ts' && file.endsWith('.ts'));
 
-  fs.readdirSync(routesDir).forEach((file) => {
-    if (file === 'index.ts' || file === 'index.js') return;
-
-    const routePath = path.join(routesDir, file);
-    const route = require(routePath);
-
-    // Use file name (without extension) as the route base
-    const routeName = '/' + path.parse(file).name;
-
-    // Handle both ES modules (export default) and CommonJS (module.exports)
-    app.use('/api' + routeName, route.default || route);
-  });
-}
+export const routes = routeFiles.map((file) => {
+  const name = path.parse(file).name;
+  const router = require(path.join(routesDir, file)).default;
+  return {
+    name,
+    router,
+  };
+});
