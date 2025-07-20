@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { routes } from './routes';
+import { registerRoutes } from './routes';
 
 // Load environment variables
 dotenv.config();
@@ -21,9 +21,6 @@ app.get('/', (_req, res) => {
 });
 
 // Use routes
-routes.forEach((route) => {
-  console.log(route.name);
-  app.use(`/api/${route.name}`, route.router);
-});
+registerRoutes(app);
 
 export default app;

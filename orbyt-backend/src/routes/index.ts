@@ -1,16 +1,30 @@
-import fs from 'fs';
-import path from 'path';
+import auth from './auth';
+import tasks from './tasks';
+import test from './test';
+import { Express, Router } from 'express';
 
-const routesDir = __dirname;
-const routeFiles = fs
-  .readdirSync(routesDir)
-  .filter((file) => file !== 'index.ts' && file.endsWith('.ts'));
+interface Route {
+  name: string;
+  router: Router;
+}
 
-export const routes = routeFiles.map((file) => {
-  const name = path.parse(file).name;
-  const router = require(path.join(routesDir, file)).default;
-  return {
-    name,
-    router,
-  };
-});
+const routes: Route[] = [
+  {
+    name: 'auth',
+    router: auth,
+  },
+  {
+    name: 'tasks',
+    router: tasks,
+  },
+  {
+    name: 'test',
+    router: test,
+  },
+];
+
+export function registerRoutes(app: Express) {
+  routes.forEach((route) => {
+    app.use(`/api/${route.name}`, route.router);
+  });
+}
