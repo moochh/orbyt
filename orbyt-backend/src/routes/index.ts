@@ -1,12 +1,10 @@
+import { Express, Router } from 'express';
+import { Route } from '../types/globals';
+
 import auth from './auth';
 import tasks from './tasks';
 import test from './test';
-import { Express, Router } from 'express';
-
-interface Route {
-  name: string;
-  router: Router;
-}
+import account from './account';
 
 const routes: Route[] = [
   {
@@ -21,9 +19,17 @@ const routes: Route[] = [
     name: 'test',
     router: test,
   },
+  {
+    name: 'account',
+    router: account,
+  },
 ];
 
 export function registerRoutes(app: Express) {
+  app.get('/', (_req, res) => {
+    res.send('🚀 API is running...');
+  });
+
   routes.forEach((route) => {
     app.use(`/api/${route.name}`, route.router);
   });
