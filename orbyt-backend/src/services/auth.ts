@@ -11,12 +11,12 @@ const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 
-export const loginUser = async (params: LoginParams) => {
+export const findUser = async ({ emailAddress, password }: LoginParams) => {
   const user = await prisma.user.findUnique({
-    where: { emailAddress: params.emailAddress },
+    where: { emailAddress: emailAddress },
   });
 
-  const isValid = user && (await argon2.verify(user.passwordHash, params.password));
+  const isValid = user && (await argon2.verify(user.passwordHash, password));
 
   if (!isValid) throw new BadRequestError('INVALID_CREDENTIALS');
 
@@ -32,21 +32,21 @@ export const generateAccessToken = (user: User) => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN as StringValue });
 };
 
-export const createUser = async (params: SignupParams) => {
+export const createUser = async ({ emailAddress, password, firstName, lastName }: SignupParams) => {
   const existingUser = await prisma.user.findUnique({
-    where: { emailAddress: params.emailAddress },
+    where: { emailAddress: emailAddress },
   });
 
   if (existingUser) throw new BadRequestError('USER_ALREADY_EXISTS');
 
-  const hashedPassword = await argon2.hash(params.password);
+  const hashedPassword = await argon2.hash(password);
 
   return await prisma.user.create({
     data: {
-      emailAddress: params.emailAddress,
+      emailAddress: emailAddress,
       passwordHash: hashedPassword,
-      firstName: params.firstName,
-      lastName: params.lastName,
+      firstName: firstName,
+      lastName: lastName,
     },
   });
 };

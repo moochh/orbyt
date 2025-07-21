@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { createUser, generateAccessToken, loginUser } from '../services/auth';
+import { createUser, generateAccessToken, findUser } from '../services/auth';
 import { BadRequestError } from '../errors';
 
 export const login = async (req: Request, res: Response) => {
   const { emailAddress, password } = req.body;
 
-  const user = await loginUser({ emailAddress, password });
+  const user = await findUser({ emailAddress, password });
   const accessToken = generateAccessToken(user);
 
   res.status(200).json({

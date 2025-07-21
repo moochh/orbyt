@@ -2,14 +2,24 @@ import { Express, Router } from 'express';
 import { Route } from '../types/globals';
 
 import auth from './auth';
-import tasks from './tasks';
-import test from './test';
 import account from './account';
+import spaces from './spaces';
+import tasks from './tasks';
+
+import test from './test';
 
 const routes: Route[] = [
   {
     name: 'auth',
     router: auth,
+  },
+  {
+    name: 'account',
+    router: account,
+  },
+  {
+    name: 'spaces',
+    router: spaces,
   },
   {
     name: 'tasks',
@@ -18,10 +28,6 @@ const routes: Route[] = [
   {
     name: 'test',
     router: test,
-  },
-  {
-    name: 'account',
-    router: account,
   },
 ];
 
