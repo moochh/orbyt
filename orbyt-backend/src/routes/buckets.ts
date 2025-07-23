@@ -1,13 +1,12 @@
 import express from 'express';
-
 import { authenticate } from '../middleware/authenticate';
-import { create, remove, update } from '../controllers/tasks';
+import { create, update, remove } from '../controllers/buckets';
 
 const router = express.Router();
 router.use(authenticate);
 
 router.post('/', create);
 router.patch('/', update);
-router.delete('/:taskId', remove);
+router.delete('/:bucketId', remove);
 
 export default router;

@@ -1,14 +1,17 @@
-import express from 'express';
-import { create, getAll, getById, remove, update } from '../controllers/spaces';
+import express, { RequestHandler } from 'express';
+import { create, getAll, getById, getTasks, remove, update } from '../controllers/spaces';
 import { authenticate } from '../middleware/authenticate';
-import { validateBody } from '../middleware/validate-body';
+import { requireFields } from '../middleware/require-fields';
+import { AuthenticatedRequest } from '../types/auth';
 
 const router = express.Router();
+router.use(authenticate);
 
-router.post('/', authenticate, validateBody(['name']), create);
-router.get('/', authenticate, getAll);
-router.get('/:spaceId', authenticate, getById);
-router.put('/:spaceId', authenticate, update);
-router.delete('/:spaceId', authenticate, remove);
+router.post('/', requireFields(['name']), create);
+router.get('/', getAll);
+router.get('/:spaceId', getById);
+router.put('/:spaceId', update);
+router.delete('/:spaceId', remove);
+router.get('/:spaceId/tasks', getTasks);
 
 export default router;

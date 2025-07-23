@@ -16,5 +16,23 @@ export const BAD_REQUEST_ERRORS = {
 
   // Spaces
   SPACE_ALREADY_EXISTS: 'A space with this name already exists.',
-  SPACE_NOT_FOUND: 'The space you are looking for does not exist.',
+
+  // Buckets
+  BUCKET_ALREADY_EXISTS: 'A bucket with this name already exists.',
 } as const;
+
+export const NOT_FOUND_ERRORS = {
+  // Spaces
+  SPACE_NOT_FOUND: 'The space you are looking for does not exist.',
+
+  // Tasks
+  TASK_NOT_FOUND: 'The task you are looking for does not exist.',
+
+  // Buckets
+  BUCKET_NOT_FOUND: 'The bucket you are looking for does not exist.',
+} as const;
+
+export const FORBIDDEN_ERRORS = {
+  // Spaces
+  ACCESS_DENIED: 'You do not have permission to access this resource.',
+};

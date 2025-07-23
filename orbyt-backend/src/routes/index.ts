@@ -1,9 +1,10 @@
-import { Express, Router } from 'express';
+import { Express } from 'express';
 import { Route } from '../types/globals';
 
 import auth from './auth';
 import account from './account';
 import spaces from './spaces';
+import buckets from './buckets';
 import tasks from './tasks';
 
 import test from './test';
@@ -20,6 +21,10 @@ const routes: Route[] = [
   {
     name: 'spaces',
     router: spaces,
+  },
+  {
+    name: 'buckets',
+    router: buckets,
   },
   {
     name: 'tasks',

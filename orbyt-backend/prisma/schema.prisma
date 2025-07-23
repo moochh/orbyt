@@ -11,11 +11,13 @@ model User {
   id            Int      @id @default(autoincrement())
   emailAddress  String   @unique                         @map("email_address")
   passwordHash  String                                   @map("password_hash")
-  firstName     String?                                  @map("first_name")
-  lastName      String?                                  @map("last_name")
+  firstName     String                                   @map("first_name")
+  lastName      String                                   @map("last_name")
 
   spaces        Space[]
+  buckets       Bucket[]
   tasks         Task[]
+  tags          Tag[]
 
   createdAt     DateTime @default(now())                 @map("created_at")
 
@@ -24,11 +26,11 @@ model User {
 
 model Space {
   id              Int        @id @default(autoincrement())
-  name            String     @unique
-  colorId         String?    @default("default") @map("color_id")
+  name            String
+  colorId         String     @default("default") @map("color_id")
   iconId          String?    @map("icon_id")
   illustrationId  String?    @map("illustration_id")
-  orderNumber     Int        @default(0) @map("order_number")
+  orderNumber     Int        @map("order_number")
 
   userId          Int        @map("user_id")
   user            User       @relation(fields: [userId], references: [id])
@@ -39,14 +41,18 @@ model Space {
   createdAt       DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt      @map("updated_at")
 
+  @@unique([userId, name])
   @@index([userId])
   @@map("spaces")
 }
 
 model Bucket {
   id           Int      @id @default(autoincrement())
-  name         String   @unique
-  orderNumber  Int      @default(0) @map("order_number")
+  name         String
+  orderNumber  Int      @map("order_number")
+
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id])
 
   spaceId      Int      @map("space_id")
   space        Space    @relation(fields: [spaceId], references: [id])
@@ -56,6 +62,9 @@ model Bucket {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt      @map("updated_at")
 
+
+  @@unique([spaceId, name])
+  @@index([userId])
   @@index([spaceId])
   @@map("buckets")
 }
@@ -66,8 +75,11 @@ model Task {
   notes          String?    @map("notes")
   dueDate        DateTime?  @map("due_date")
   priorityLevel  String?    @map("priority_level")
-  orderNumber    Int        @default(0) @map("order_number")
+  orderNumber    Int        @map("order_number")
   isDone         Boolean    @default(false) @map("is_done")
+
+  userId         Int        @map("user_id")
+  user           User       @relation(fields: [userId], references: [id])
 
   spaceId        Int        @map("space_id")
   space          Space      @relation(fields: [spaceId], references: [id])
@@ -75,8 +87,6 @@ model Task {
   bucketId       Int?       @map("bucket_id")
   bucket         Bucket?    @relation(fields: [bucketId], references: [id])
 
-  userId         Int        @map("user_id")
-  user           User       @relation(fields: [userId], references: [id])
 
   subtasks       Subtask[]
   tags           Tag[]      @relation("TaskTags")
@@ -94,7 +104,7 @@ model Subtask {
   id           Int      @id @default(autoincrement())
   title        String
   isDone       Boolean  @default(false) @map("is_done")
-  orderNumber  Int      @default(0) @map("order_number")
+  orderNumber  Int      @map("order_number")
 
   taskId       Int      @map("task_id")
   task         Task     @relation(fields: [taskId], references: [id])
@@ -108,12 +118,16 @@ model Subtask {
 
 model Tag {
   id         Int      @id @default(autoincrement())
-  name       String   @unique
-  colorId    String?  @default("default") @map("color_id")
+  name       String
+  colorId    String  @default("default") @map("color_id")
+
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
 
   tasks      Task[]   @relation("TaskTags")
 
   createdAt  DateTime @default(now()) @map("created_at")
 
+  @@unique([userId, name])
   @@map("tags")
 }

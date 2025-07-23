@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import { BadRequestError } from '../errors';
 
-export const validateBody = (requiredFields: string[]) => {
+export const requireFields = (requiredFields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const missing = requiredFields.filter((field) => !req.body[field]);
 

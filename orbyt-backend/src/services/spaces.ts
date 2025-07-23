@@ -1,6 +1,6 @@
 import { prisma } from '../lib';
-import { CreateSpaceParams, UpdateSpaceParams } from '../types/spaces';
-import { BadRequestError } from '../errors';
+import { CreateSpaceParams, ScopedSpaceParams, UpdateSpaceParams } from '../types/spaces';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../errors';
 
 export const createSpace = async ({
   userId,
@@ -8,9 +8,10 @@ export const createSpace = async ({
   colorId,
   iconId,
   illustrationId,
+  orderNumber,
 }: CreateSpaceParams) => {
   const existingSpace = await prisma.space.findUnique({
-    where: { userId, name },
+    where: { userId_name: { userId, name } },
   });
 
   if (existingSpace) throw new BadRequestError('SPACE_ALREADY_EXISTS');
@@ -22,6 +23,7 @@ export const createSpace = async ({
       colorId,
       iconId,
       illustrationId,
+      orderNumber,
     },
   });
 };
@@ -32,24 +34,36 @@ export const getAllSpaces = async (userId: number) => {
   });
 };
 
-export const findSpace = async (id: number) => {
+export const findSpace = async ({ userId, spaceId }: ScopedSpaceParams) => {
   const space = await prisma.space.findUnique({
-    where: { id },
+    where: { id: spaceId },
+    select: {
+      userId: true,
+      id: true,
+      name: true,
+      colorId: true,
+      iconId: true,
+      illustrationId: true,
+      orderNumber: true,
+    },
   });
 
-  if (!space) throw new BadRequestError('SPACE_NOT_FOUND');
+  if (!space) throw new NotFoundError('SPACE_NOT_FOUND');
+  if (space.userId !== userId) throw new ForbiddenError('ACCESS_DENIED');
 
   return space;
 };
 
 export const updateSpace = async ({
+  userId,
   spaceId,
   name,
   colorId,
   iconId,
   illustrationId,
+  orderNumber,
 }: UpdateSpaceParams) => {
-  await findSpace(spaceId);
+  await findSpace({ spaceId, userId });
 
   return await prisma.space.update({
     where: { id: spaceId },
@@ -58,14 +72,25 @@ export const updateSpace = async ({
       colorId,
       iconId,
       illustrationId,
+      orderNumber,
     },
   });
 };
 
-export const deleteSpace = async (id: number) => {
-  await findSpace(id);
+export const deleteSpace = async ({ userId, spaceId }: ScopedSpaceParams) => {
+  await findSpace({ spaceId, userId });
 
   return await prisma.space.delete({
-    where: { id },
+    where: { id: spaceId },
+  });
+};
+
+export const getTasksInSpace = async ({ userId, spaceId }: ScopedSpaceParams) => {
+  await findSpace({ userId, spaceId });
+
+  return await prisma.task.findMany({
+    where: {
+      spaceId,
+    },
   });
 };

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { validateBody } from '../middleware/validate-body';
+import { requireFields } from '../middleware/require-fields';
 import { getAllUsers } from '../controllers/test';
 
 const router = express.Router();

@@ -1,11 +1,15 @@
 import express from 'express';
 
-import { validateBody } from '../middleware/validate-body';
+import { requireFields } from '../middleware/require-fields';
 import { login, signup } from '../controllers/auth';
 
 const router = express.Router();
 
-router.post('/login', validateBody(['emailAddress', 'password']), login);
-router.post('/signup', validateBody(['emailAddress', 'password', 'firstName', 'lastName']), signup);
+router.post('/login', requireFields(['emailAddress', 'password']), login);
+router.post(
+  '/signup',
+  requireFields(['emailAddress', 'password', 'firstName', 'lastName']),
+  signup
+);
 
 export default router;

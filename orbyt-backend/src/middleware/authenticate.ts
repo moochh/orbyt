@@ -3,7 +3,11 @@ import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../errors';
 import { AuthenticatedRequest } from '../types/auth';
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = (
+  req: Request,
+  res: Response<AuthenticatedRequest>,
+  next: NextFunction
+) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

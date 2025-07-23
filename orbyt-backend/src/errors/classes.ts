@@ -1,5 +1,15 @@
-import { BAD_REQUEST_ERRORS, UNAUTHORIZED_ERRORS } from './messages';
-import { BadRequestErrorCode, UnauthorizedErrorCode } from '../types/errors';
+import {
+  BAD_REQUEST_ERRORS,
+  FORBIDDEN_ERRORS,
+  NOT_FOUND_ERRORS,
+  UNAUTHORIZED_ERRORS,
+} from './messages';
+import {
+  BadRequestErrorCode,
+  ForbiddenErrorCode,
+  NotFoundErrorCode,
+  UnauthorizedErrorCode,
+} from '../types/errors';
 
 export class AppError extends Error {
   public readonly statusCode: number;
@@ -27,14 +37,14 @@ export class UnauthorizedError extends AppError {
 }
 
 export class ForbiddenError extends AppError {
-  constructor(code: string, message: string) {
-    super(code, message, 403);
+  constructor(code: ForbiddenErrorCode) {
+    super(code, FORBIDDEN_ERRORS[code], 403);
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(code: string, message: string) {
-    super(code, message, 404);
+  constructor(code: NotFoundErrorCode) {
+    super(code, NOT_FOUND_ERRORS[code], 404);
   }
 }
 
