@@ -25,11 +25,14 @@ export const NOT_FOUND_ERRORS = {
   // Spaces
   SPACE_NOT_FOUND: 'The space you are looking for does not exist.',
 
+  // Buckets
+  BUCKET_NOT_FOUND: 'The bucket you are looking for does not exist.',
+
   // Tasks
   TASK_NOT_FOUND: 'The task you are looking for does not exist.',
 
-  // Buckets
-  BUCKET_NOT_FOUND: 'The bucket you are looking for does not exist.',
+  // Tags
+  TAG_NOT_FOUND: 'The tag you are looking for does not exist.',
 } as const;
 
 export const FORBIDDEN_ERRORS = {

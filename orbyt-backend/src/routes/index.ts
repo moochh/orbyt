@@ -6,6 +6,7 @@ import account from './account';
 import spaces from './spaces';
 import buckets from './buckets';
 import tasks from './tasks';
+import tags from './tags';
 
 import test from './test';
 
@@ -29,6 +30,10 @@ const routes: Route[] = [
   {
     name: 'tasks',
     router: tasks,
+  },
+  {
+    name: 'tags',
+    router: tags,
   },
   {
     name: 'test',
