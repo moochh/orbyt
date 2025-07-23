@@ -1,24 +1,6 @@
 import { prisma } from '../lib';
-import {
-  CreateTagParams,
-  ScopedTagNameParams,
-  ScopedTagParams,
-  UpdateTagParams,
-} from '../types/tags';
+import { ScopedTagNameParams, ScopedTagParams, UpdateTagParams } from '../types/tags';
 import { ForbiddenError, NotFoundError } from '../errors';
-
-export const createTag = async ({ userId, data }: CreateTagParams) => {
-  await findTagByName({ userId, name: data.name });
-
-  const tag = await prisma.tag.create({
-    data: {
-      userId,
-      ...data,
-    },
-  });
-
-  return tag;
-};
 
 export const updateTag = async ({ userId, data }: UpdateTagParams) => {
   await findTag({ userId, tagId: data.id });

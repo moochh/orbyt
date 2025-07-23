@@ -1,4 +1,5 @@
 import { Tag as TagSchema } from '@prisma/client';
+import { ScopedParams } from './globals';
 
 export interface ScopedTagParams {
   userId: number;
@@ -10,12 +11,9 @@ export interface ScopedTagNameParams {
   name: string;
 }
 
-export interface CreateTagParams {
-  userId: number;
-  data: Pick<TagSchema, 'name' | 'colorId'>;
-}
+// Update
+export type UpdateTagParams = ScopedParams<UpdateTagData>;
+export interface UpdateTagData extends Pick<TagSchema, 'id' | 'name' | 'colorId'> {}
 
-export interface UpdateTagParams {
-  userId: number;
-  data: Pick<TagSchema, 'id' | 'name' | 'colorId'>;
-}
+// Tag
+export type Tag = Pick<TagSchema, 'userId' | 'id' | 'name' | 'colorId'>;

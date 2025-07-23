@@ -1,41 +1,35 @@
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../types/auth';
-import { CreateBucketParams, UpdateBucketParams } from '../types/buckets';
 import { createBucket, deleteBucket, updateBucket } from '../services/buckets';
+import { CreateBucketData, UpdateBucketData } from '../types/buckets';
 
-export const create = async (
-  req: Request<{}, {}, Omit<CreateBucketParams, 'userId'>>,
-  res: Response
-) => {
-  const createParams = req.body;
+export const create = async (req: Request<{}, {}, CreateBucketData>, res: Response) => {
   const userId = (req as AuthenticatedRequest).userId;
+  const data = req.body;
 
   const bucket = await createBucket({
     userId,
-    ...createParams,
+    data,
   });
 
   res.status(201).json(bucket);
 };
 
-export const update = async (
-  req: Request<{}, {}, Omit<UpdateBucketParams, 'userId'>>,
-  res: Response
-) => {
-  const updateParams = req.body;
+export const update = async (req: Request<{}, {}, UpdateBucketData>, res: Response) => {
   const userId = (req as AuthenticatedRequest).userId;
+  const data = req.body;
 
   const bucket = await updateBucket({
     userId,
-    ...updateParams,
+    data,
   });
 
   res.status(200).json(bucket);
 };
 
 export const remove = async (req: Request, res: Response) => {
-  const bucketId = parseInt(req.params.bucketId);
   const userId = (req as AuthenticatedRequest).userId;
+  const bucketId = parseInt(req.params.bucketId);
 
   await deleteBucket({ userId, bucketId });
 

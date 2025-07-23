@@ -1,14 +1,5 @@
 import { Bucket as BucketSchema } from '@prisma/client';
-
-export interface CreateBucketParams {
-  userId: number;
-  data: Pick<BucketSchema, 'spaceId' | 'name' | 'orderNumber'>;
-}
-
-export interface UpdateBucketParams {
-  userId: number;
-  data: Pick<BucketSchema, 'id' | 'name' | 'orderNumber'>;
-}
+import { ScopedParams } from './globals';
 
 export interface ScopedBucketParams {
   userId: number;
@@ -19,3 +10,11 @@ export interface ScopedBucketNameParams {
   userId: number;
   name: string;
 }
+
+// Create
+export type CreateBucketParams = ScopedParams<CreateBucketData>;
+export interface CreateBucketData extends Pick<BucketSchema, 'spaceId' | 'name'> {}
+
+// Update
+export type UpdateBucketParams = ScopedParams<UpdateBucketData>;
+export interface UpdateBucketData extends Pick<BucketSchema, 'id' | 'name' | 'orderNumber'> {}

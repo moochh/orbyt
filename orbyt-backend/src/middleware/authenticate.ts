@@ -1,13 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import { UnauthorizedError } from '../errors';
 import { AuthenticatedRequest } from '../types/auth';
 
-export const authenticate = (
-  req: Request,
-  res: Response<AuthenticatedRequest>,
-  next: NextFunction
-) => {
+export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -22,6 +18,10 @@ export const authenticate = (
     (req as AuthenticatedRequest).userId = parseInt(decoded.sub);
     next();
   } catch (err) {
+    if (err instanceof TokenExpiredError) {
+      throw new UnauthorizedError('EXPIRED_TOKEN');
+    }
+
     throw new UnauthorizedError('INVALID_TOKEN');
   }
 };

@@ -1,28 +1,23 @@
 import { prisma } from '../lib';
 import { CreateSpaceParams, ScopedSpaceParams, UpdateSpaceParams } from '../types/spaces';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../errors';
+import { validateUpdateData } from '../utils/helpers';
 
-export const createSpace = async ({
-  userId,
-  name,
-  colorId,
-  iconId,
-  illustrationId,
-  orderNumber,
-}: CreateSpaceParams) => {
+export const createSpace = async ({ userId, data }: CreateSpaceParams) => {
   const existingSpace = await prisma.space.findUnique({
-    where: { userId_name: { userId, name } },
+    where: { userId_name: { userId, name: data.name } },
   });
 
   if (existingSpace) throw new BadRequestError('SPACE_ALREADY_EXISTS');
 
+  const orderNumber = await prisma.space.count({
+    where: { userId },
+  });
+
   return await prisma.space.create({
     data: {
       userId,
-      name,
-      colorId,
-      iconId,
-      illustrationId,
+      ...data,
       orderNumber,
     },
   });
@@ -54,25 +49,17 @@ export const findSpace = async ({ userId, spaceId }: ScopedSpaceParams) => {
   return space;
 };
 
-export const updateSpace = async ({
-  userId,
-  spaceId,
-  name,
-  colorId,
-  iconId,
-  illustrationId,
-  orderNumber,
-}: UpdateSpaceParams) => {
-  await findSpace({ spaceId, userId });
+export const updateSpace = async ({ userId, data }: UpdateSpaceParams) => {
+  await findSpace({ spaceId: data.id, userId });
+
+  const { id, ...updateData } = data;
+
+  validateUpdateData(updateData);
 
   return await prisma.space.update({
-    where: { id: spaceId },
+    where: { id: data.id },
     data: {
-      name,
-      colorId,
-      iconId,
-      illustrationId,
-      orderNumber,
+      ...updateData,
     },
   });
 };
@@ -88,9 +75,44 @@ export const deleteSpace = async ({ userId, spaceId }: ScopedSpaceParams) => {
 export const getTasksInSpace = async ({ userId, spaceId }: ScopedSpaceParams) => {
   await findSpace({ userId, spaceId });
 
-  return await prisma.task.findMany({
-    where: {
-      spaceId,
-    },
-  });
+  const [buckets, tasks] = await Promise.all([
+    prisma.bucket.findMany({
+      where: { spaceId },
+      select: { id: true, name: true, orderNumber: true },
+      orderBy: { orderNumber: 'asc' },
+    }),
+    prisma.task.findMany({
+      where: { spaceId },
+      orderBy: { orderNumber: 'asc' },
+    }),
+  ]);
+
+  const bucketMap: Record<number, (typeof buckets)[number] & { tasks: typeof tasks }> = {};
+
+  for (const bucket of buckets) {
+    bucketMap[bucket.id] = { ...bucket, tasks: [] };
+  }
+
+  const ungroupedTasks: typeof tasks = [];
+
+  for (const task of tasks) {
+    if (task.bucketId && bucketMap[task.bucketId]) {
+      bucketMap[task.bucketId].tasks.push(task);
+    } else {
+      ungroupedTasks.push(task);
+    }
+  }
+
+  const groupedBuckets = Object.values(bucketMap);
+
+  if (ungroupedTasks.length > 0) {
+    groupedBuckets.unshift({
+      id: 0,
+      name: 'Ungrouped',
+      orderNumber: -1,
+      tasks: ungroupedTasks,
+    });
+  }
+
+  return groupedBuckets;
 };

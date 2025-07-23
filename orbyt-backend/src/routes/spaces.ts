@@ -10,7 +10,7 @@ router.use(authenticate);
 router.post('/', requireFields(['name']), create);
 router.get('/', getAll);
 router.get('/:spaceId', getById);
-router.put('/:spaceId', update);
+router.patch('/', update);
 router.delete('/:spaceId', remove);
 router.get('/:spaceId/tasks', getTasks);
 

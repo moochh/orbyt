@@ -6,18 +6,26 @@ import {
   UpdateBucketParams,
 } from '../types/buckets';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../errors';
+import { findSpace } from './spaces';
 
 export const createBucket = async ({ userId, data }: CreateBucketParams) => {
+  await findSpace({ spaceId: data.spaceId, userId });
+
   const existingBucket = await prisma.bucket.findUnique({
     where: { spaceId_name: { spaceId: data.spaceId, name: data.name } },
   });
 
   if (existingBucket) throw new BadRequestError('BUCKET_ALREADY_EXISTS');
 
+  const orderNumber = await prisma.bucket.count({
+    where: { spaceId: data.spaceId },
+  });
+
   return await prisma.bucket.create({
     data: {
       userId,
       ...data,
+      orderNumber,
     },
   });
 };

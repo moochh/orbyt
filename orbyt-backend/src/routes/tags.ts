@@ -1,12 +1,12 @@
 import express from 'express';
 import { authenticate } from '../middleware/authenticate';
-import { create, update, remove } from '../controllers/tags';
+import { update, remove } from '../controllers/tags';
+import { requireFields } from '../middleware/require-fields';
 
 const router = express.Router();
 router.use(authenticate);
 
-router.post('/', create);
-router.patch('/', update);
+router.patch('/', requireFields(['id']), update);
 router.delete('/:tagId', remove);
 
 export default router;

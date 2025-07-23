@@ -14,6 +14,9 @@ export const BAD_REQUEST_ERRORS = {
   INVALID_INPUT: 'The input provided is not valid.',
   USER_ALREADY_EXISTS: 'An account with this email address already exists.',
 
+  //   General
+  NO_FIELDS_TO_UPDATE: 'No fields were provided to update.',
+
   // Spaces
   SPACE_ALREADY_EXISTS: 'A space with this name already exists.',
 

@@ -9,3 +9,8 @@ export interface Route {
   name: string;
   router: Router;
 }
+
+export interface ScopedParams<T> {
+  userId: number;
+  data: T;
+}
